@@ -18,5 +18,6 @@ namespace ProyectoP1Bancos.Data
         public DbSet<ProyectoP1Bancos.Models.Usuario> Usuario { get; set; } = default!;
         public DbSet<ProyectoP1Bancos.Models.Cuenta> Cuenta { get; set; } = default!;
         public DbSet<ProyectoP1Bancos.Models.RegistroUsuario> RegistroUsuario { get; set; } = default!;
+        public DbSet<ProyectoP1Bancos.Models.Meta> Meta { get; set; } = default!;
     }
 }

@@ -10,24 +10,22 @@ using ProyectoP1Bancos.Models;
 
 namespace ProyectoP1Bancos.Controllers
 {
-    public class RegistroUsuariosController : Controller
+    public class MetasController : Controller
     {
         private readonly ProyectoP1BancosContext _context;
-       
 
-        public RegistroUsuariosController(ProyectoP1BancosContext context)
+        public MetasController(ProyectoP1BancosContext context)
         {
-            
             _context = context;
         }
 
-        // GET: RegistroUsuarios
+        // GET: Metas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.RegistroUsuario.ToListAsync());
+            return View(await _context.Meta.ToListAsync());
         }
 
-        // GET: RegistroUsuarios/Details/5
+        // GET: Metas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,69 +33,39 @@ namespace ProyectoP1Bancos.Controllers
                 return NotFound();
             }
 
-            var registroUsuario = await _context.RegistroUsuario
-                .FirstOrDefaultAsync(m => m.IdRegistro == id);
-            if (registroUsuario == null)
+            var meta = await _context.Meta
+                .FirstOrDefaultAsync(m => m.IdMeta == id);
+            if (meta == null)
             {
                 return NotFound();
             }
 
-            return View(registroUsuario);
+            return View(meta);
         }
 
-        // GET: RegistroUsuarios/Create
+        // GET: Metas/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult Inicio()
-        {
-            return View();
-        }
-        public IActionResult Register()
-        {
-            return View();
-        }
-        public IActionResult Ayuda()
-        {
-            return View();
-        }
-        public IActionResult IndexGay(string nombre, string contraseña)
-        {
-            var usuario = _context.RegistroUsuario.FirstOrDefault(u => u.NombreUsuario == nombre && u.Contraseña == contraseña);
-
-            if (usuario != null)
-            {
-
-                return RedirectToAction("IndexGay", "Home");
-            }
-            else
-            {
-                ViewBag.ErrorMessage = "Nombre o contraseña incorrectos.";
-                return View();
-            }
-
-        }
-
-
-        // POST: RegistroUsuarios/Create
+        // POST: Metas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdRegistro,NombreUsuario,Contraseña")] RegistroUsuario registroUsuario)
+        public async Task<IActionResult> Create([Bind("IdMeta,NombreMeta,FechaInicio,FechaFin,MetaAhorro")] Meta meta)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(registroUsuario);
+                _context.Add(meta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(registroUsuario);
+            return View(meta);
         }
 
-        // GET: RegistroUsuarios/Edit/5
+        // GET: Metas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -105,22 +73,22 @@ namespace ProyectoP1Bancos.Controllers
                 return NotFound();
             }
 
-            var registroUsuario = await _context.RegistroUsuario.FindAsync(id);
-            if (registroUsuario == null)
+            var meta = await _context.Meta.FindAsync(id);
+            if (meta == null)
             {
                 return NotFound();
             }
-            return View(registroUsuario);
+            return View(meta);
         }
 
-        // POST: RegistroUsuarios/Edit/5
+        // POST: Metas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRegistro,NombreUsuario,Contraseña")] RegistroUsuario registroUsuario)
+        public async Task<IActionResult> Edit(int id, [Bind("IdMeta,NombreMeta,FechaInicio,FechaFin,MetaAhorro")] Meta meta)
         {
-            if (id != registroUsuario.IdRegistro)
+            if (id != meta.IdMeta)
             {
                 return NotFound();
             }
@@ -129,12 +97,12 @@ namespace ProyectoP1Bancos.Controllers
             {
                 try
                 {
-                    _context.Update(registroUsuario);
+                    _context.Update(meta);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RegistroUsuarioExists(registroUsuario.IdRegistro))
+                    if (!MetaExists(meta.IdMeta))
                     {
                         return NotFound();
                     }
@@ -145,10 +113,10 @@ namespace ProyectoP1Bancos.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(registroUsuario);
+            return View(meta);
         }
 
-        // GET: RegistroUsuarios/Delete/5
+        // GET: Metas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,34 +124,34 @@ namespace ProyectoP1Bancos.Controllers
                 return NotFound();
             }
 
-            var registroUsuario = await _context.RegistroUsuario
-                .FirstOrDefaultAsync(m => m.IdRegistro == id);
-            if (registroUsuario == null)
+            var meta = await _context.Meta
+                .FirstOrDefaultAsync(m => m.IdMeta == id);
+            if (meta == null)
             {
                 return NotFound();
             }
 
-            return View(registroUsuario);
+            return View(meta);
         }
 
-        // POST: RegistroUsuarios/Delete/5
+        // POST: Metas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var registroUsuario = await _context.RegistroUsuario.FindAsync(id);
-            if (registroUsuario != null)
+            var meta = await _context.Meta.FindAsync(id);
+            if (meta != null)
             {
-                _context.RegistroUsuario.Remove(registroUsuario);
+                _context.Meta.Remove(meta);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RegistroUsuarioExists(int id)
+        private bool MetaExists(int id)
         {
-            return _context.RegistroUsuario.Any(e => e.IdRegistro == id);
+            return _context.Meta.Any(e => e.IdMeta == id);
         }
     }
 }

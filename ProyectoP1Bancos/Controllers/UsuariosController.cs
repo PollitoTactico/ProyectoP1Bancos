@@ -57,18 +57,31 @@ namespace ProyectoP1Bancos.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdUsuario,Nombre,Apellido,Cedula,Telefono,CuentaIdCuenta")] Usuario usuario)
+        public async Task<IActionResult> Create(Usuario usuario)
         {
-            if (ModelState.IsValid)
+            //System.Console.Write(ModelState.IsValid);
+            // if (ModelState.IsValid)
+            //{
+            Usuario usuario2 = await _context.Usuario.FirstOrDefaultAsync(x => x.Cedula == usuario.Cedula);
+            if (usuario2 == null)
             {
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
             }
-            _context.Add(usuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            //ViewData["CuentaIdCuenta"] = new SelectList(_context.Cuenta, "IdCuenta", "NumCuenta", usuario.CuentaIdCuenta);
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Ya existe un usuario con esta cédula.");
+                return View();
+            }
+
+            //Usuario usuario3 = await _context.Usuario.FirstOrDefault(x => x.Cedula == usuario.);
+
+
+            //}
+
+            // ViewData["CuentaIdCuenta"] = new SelectList(_context.Cuenta, "IdCuenta", "NumCuenta", usuario.CuentaIdCuenta);
             //return View(usuario);
         }
 

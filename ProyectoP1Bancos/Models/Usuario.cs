@@ -26,8 +26,9 @@ namespace ProyectoP1Bancos.Models
 
         [ForeignKey("Cuenta")]
         [Required(ErrorMessage = "El campo Cuenta es obligatorio")]
+        
         public int? CuentaIdCuenta { get; set; }
        
-        public Cuenta Cuenta { get; set; }
+        public Cuenta? Cuenta { get; set; }
     }
 }
