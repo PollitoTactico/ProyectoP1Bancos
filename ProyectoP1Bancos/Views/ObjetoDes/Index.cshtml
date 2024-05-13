@@ -1,13 +1,16 @@
 ﻿@model IEnumerable<ProyectoP1Bancos.Models.ObjetoDes>
 
 @{
+    Layout = "~/Views/Shared/_LayoutHetero.cshtml";
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Objeto que Deseas</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <div>
+        <a asp-action="Create">Create New</a>
+    </div>
 </p>
 <table class="table">
     <thead>

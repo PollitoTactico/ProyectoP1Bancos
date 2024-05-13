@@ -10,23 +10,24 @@ using ProyectoP1Bancos.Models;
 
 namespace ProyectoP1Bancos.Controllers
 {
-    public class UsuariosController : Controller
+    public class RegistroUsuariosController : Controller
     {
         private readonly ProyectoP1BancosContext _context;
+       
 
-        public UsuariosController(ProyectoP1BancosContext context)
+        public RegistroUsuariosController(ProyectoP1BancosContext context)
         {
+            
             _context = context;
         }
 
-        // GET: Usuarios
+        // GET: RegistroUsuarios
         public async Task<IActionResult> Index()
         {
-            var proyectoP1BancosContext = _context.Usuario.Include(u => u.Cuenta);
-            return View(await proyectoP1BancosContext.ToListAsync());
+            return View(await _context.RegistroUsuario.ToListAsync());
         }
 
-        // GET: Usuarios/Details/5
+        // GET: RegistroUsuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,45 +35,65 @@ namespace ProyectoP1Bancos.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario
-                .Include(u => u.Cuenta)
-                .FirstOrDefaultAsync(m => m.IdUsuario == id);
-            if (usuario == null)
+            var registroUsuario = await _context.RegistroUsuario
+                .FirstOrDefaultAsync(m => m.IdRegistro == id);
+            if (registroUsuario == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(registroUsuario);
         }
 
-        // GET: Usuarios/Create
+        // GET: RegistroUsuarios/Create
         public IActionResult Create()
         {
-            ViewData["CuentaIdCuenta"] = new SelectList(_context.Cuenta, "IdCuenta", "NumCuenta");
             return View();
         }
 
-        // POST: Usuarios/Create
+        public IActionResult Inicio()
+        {
+            return View();
+        }
+        public IActionResult Register()
+        {
+            return View();
+        }
+        public IActionResult IndexGay(string nombre, string contraseña)
+        {
+            var usuario = _context.RegistroUsuario.FirstOrDefault(u => u.NombreUsuario == nombre && u.Contraseña == contraseña);
+
+            if (usuario != null)
+            {
+
+                return RedirectToAction("IndexGay", "Home");
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Nombre o contraseña incorrectos.";
+                return View();
+            }
+
+        }
+
+
+        // POST: RegistroUsuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdUsuario,Nombre,Apellido,Cedula,Telefono,CuentaIdCuenta")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("IdRegistro,NombreUsuario,Contraseña")] RegistroUsuario registroUsuario)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
+                _context.Add(registroUsuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            _context.Add(usuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            //ViewData["CuentaIdCuenta"] = new SelectList(_context.Cuenta, "IdCuenta", "NumCuenta", usuario.CuentaIdCuenta);
-            //return View(usuario);
+            return View(registroUsuario);
         }
 
-        // GET: Usuarios/Edit/5
+        // GET: RegistroUsuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,24 +101,22 @@ namespace ProyectoP1Bancos.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario == null)
+            var registroUsuario = await _context.RegistroUsuario.FindAsync(id);
+            if (registroUsuario == null)
             {
                 return NotFound();
             }
-            ViewData["CuentaIdCuenta"] = new SelectList(_context.Cuenta, "IdCuenta", "NumCuenta", usuario.CuentaIdCuenta);
-            return View(usuario);
-
+            return View(registroUsuario);
         }
 
-        // POST: Usuarios/Edit/5
+        // POST: RegistroUsuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdUsuario,Nombre,Apellido,Cedula,Telefono,CuentaIdCuenta")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("IdRegistro,NombreUsuario,Contraseña")] RegistroUsuario registroUsuario)
         {
-            if (id != usuario.IdUsuario)
+            if (id != registroUsuario.IdRegistro)
             {
                 return NotFound();
             }
@@ -106,12 +125,12 @@ namespace ProyectoP1Bancos.Controllers
             {
                 try
                 {
-                    _context.Update(usuario);
+                    _context.Update(registroUsuario);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsuarioExists(usuario.IdUsuario))
+                    if (!RegistroUsuarioExists(registroUsuario.IdRegistro))
                     {
                         return NotFound();
                     }
@@ -122,11 +141,10 @@ namespace ProyectoP1Bancos.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CuentaIdCuenta"] = new SelectList(_context.Cuenta, "IdCuenta", "NumCuenta", usuario.CuentaIdCuenta);
-            return View(usuario);
+            return View(registroUsuario);
         }
 
-        // GET: Usuarios/Delete/5
+        // GET: RegistroUsuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,35 +152,34 @@ namespace ProyectoP1Bancos.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario
-                .Include(u => u.Cuenta)
-                .FirstOrDefaultAsync(m => m.IdUsuario == id);
-            if (usuario == null)
+            var registroUsuario = await _context.RegistroUsuario
+                .FirstOrDefaultAsync(m => m.IdRegistro == id);
+            if (registroUsuario == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(registroUsuario);
         }
 
-        // POST: Usuarios/Delete/5
+        // POST: RegistroUsuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario != null)
+            var registroUsuario = await _context.RegistroUsuario.FindAsync(id);
+            if (registroUsuario != null)
             {
-                _context.Usuario.Remove(usuario);
+                _context.RegistroUsuario.Remove(registroUsuario);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UsuarioExists(int id)
+        private bool RegistroUsuarioExists(int id)
         {
-            return _context.Usuario.Any(e => e.IdUsuario == id);
+            return _context.RegistroUsuario.Any(e => e.IdRegistro == id);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoP1Bancos.Data;
 
@@ -11,9 +12,11 @@ using ProyectoP1Bancos.Data;
 namespace ProyectoP1Bancos.Migrations
 {
     [DbContext(typeof(ProyectoP1BancosContext))]
-    partial class ProyectoP1BancosContextModelSnapshot : ModelSnapshot
+    [Migration("20240513003005_nueva")]
+    partial class nueva
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,6 +106,7 @@ namespace ProyectoP1Bancos.Migrations
 
                     b.Property<int?>("CuentaIdCuenta")
                         .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")

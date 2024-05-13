@@ -6,10 +6,9 @@ namespace ProyectoP1Bancos.Models
     {
         [Key]
         public int IdRegistro { get; set; }
-        [Required]
+        [Required (ErrorMessage = "Este campo es obligatorio")]
         public string NombreUsuario { get; set; }
-        [Required]
-        [StringLength(10)]
+        [Required (ErrorMessage = "Este campo es obligatorio")]
         public string Contraseña { get; set;}
         
        
