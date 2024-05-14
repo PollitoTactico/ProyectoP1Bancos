@@ -22,7 +22,7 @@ namespace ProyectoP1Bancos.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            var proyectoP1BancosContext = _context.Usuario.Include(u => u.Cuenta);
+            var proyectoP1BancosContext = _context.Usuario.Include(u => u.Cuenta).OrderBy(u => u.Nombre);
             return View(await proyectoP1BancosContext.ToListAsync());
         }
 
@@ -33,7 +33,7 @@ namespace ProyectoP1Bancos.Controllers
             {
                 return NotFound();
             }
-
+           
             var usuario = await _context.Usuario
                 .Include(u => u.Cuenta)
                 .FirstOrDefaultAsync(m => m.IdUsuario == id);
@@ -63,8 +63,10 @@ namespace ProyectoP1Bancos.Controllers
             // if (ModelState.IsValid)
             //{
             Usuario usuario2 = await _context.Usuario.FirstOrDefaultAsync(x => x.Cedula == usuario.Cedula);
-            if (usuario2 == null)
+            Usuario usuario3 = await _context.Usuario.FirstOrDefaultAsync(x => x.CuentaIdCuenta == usuario.CuentaIdCuenta);
+            if (usuario2 == null && usuario3 == null)
             {
+                
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -72,7 +74,7 @@ namespace ProyectoP1Bancos.Controllers
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Ya existe un usuario con esta cédula.");
+                ModelState.AddModelError(string.Empty, "Ya existe un usuario con esta cédula o cuenta, Porvafor regrese");
                 return View();
             }
 
